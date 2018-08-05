@@ -31,7 +31,7 @@ func main() {
 				0.2,
 			}
 
-			v = v.Mul(255.99)
+			v = v.Multiply(255.99)
 
 			f.WriteString(fmt.Sprintf("%d %d %d\n", v.R(), v.G(), v.B()))
 		}

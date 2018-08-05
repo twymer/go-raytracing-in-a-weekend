@@ -1,6 +1,9 @@
 package main
 
-import "testing"
+import (
+	"math"
+	"testing"
+)
 
 func compareVectors(t *testing.T, expected Vector, got Vector) {
 	if expected.Array() != got.Array() {
@@ -9,7 +12,7 @@ func compareVectors(t *testing.T, expected Vector, got Vector) {
 }
 
 func compareFloats(t *testing.T, expected float64, got float64) {
-	if expected != got {
+	if math.Abs(expected-got) >= .00001 {
 		t.Errorf("Failure: Expected %f, got %f", expected, got)
 	}
 }
@@ -31,7 +34,7 @@ func TestSubtraction(t *testing.T) {
 	v1 := Vector{1, 1, 1}
 	v2 := Vector{0, 1, 2}
 
-	result := v1.Sub(v2)
+	result := v1.Subtract(v2)
 
 	compareVectors(
 		t,
@@ -43,11 +46,23 @@ func TestSubtraction(t *testing.T) {
 func TestMultiplication(t *testing.T) {
 	v := Vector{0, 1, 2}
 
-	result := v.Mul(4)
+	result := v.Multiply(4)
 
 	compareVectors(
 		t,
 		Vector{0, 4, 8},
+		result,
+	)
+}
+
+func TestDivide(t *testing.T) {
+	v := Vector{0, 5, 10}
+
+	result := v.Divide(2)
+
+	compareVectors(
+		t,
+		Vector{0, 2.5, 5},
 		result,
 	)
 }
@@ -76,4 +91,20 @@ func TestDotProduct(t *testing.T) {
 		26,
 		result,
 	)
+}
+
+func TestLength(t *testing.T) {
+	v := Vector{3, 4, 5}
+
+	result := v.Length()
+
+	compareFloats(
+		t,
+		7.07106781187,
+		result,
+	)
+}
+
+func TestUnitVector(t *testing.T) {
+	t.Skipped()
 }

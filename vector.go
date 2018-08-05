@@ -1,5 +1,7 @@
 package main
 
+import "math"
+
 type Vector struct {
 	X, Y, Z float64
 }
@@ -32,7 +34,7 @@ func (v1 Vector) Add(v2 Vector) Vector {
 	}
 }
 
-func (v1 Vector) Sub(v2 Vector) Vector {
+func (v1 Vector) Subtract(v2 Vector) Vector {
 	return Vector{
 		v1.X - v2.X,
 		v1.Y - v2.Y,
@@ -40,12 +42,24 @@ func (v1 Vector) Sub(v2 Vector) Vector {
 	}
 }
 
-func (v Vector) Mul(t float64) Vector {
+func (v Vector) Multiply(t float64) Vector {
 	return Vector{
 		v.X * t,
 		v.Y * t,
 		v.Z * t,
 	}
+}
+
+func (v Vector) Divide(t float64) Vector {
+	return Vector{
+		v.X / t,
+		v.Y / t,
+		v.Z / t,
+	}
+}
+
+func (v Vector) Length() float64 {
+	return math.Sqrt(v.X*v.X + v.Y*v.Y + v.Z*v.Z)
 }
 
 func (v1 Vector) Cross(v2 Vector) Vector {
@@ -58,4 +72,8 @@ func (v1 Vector) Cross(v2 Vector) Vector {
 
 func (v1 Vector) Dot(v2 Vector) float64 {
 	return v1.X*v2.X + v1.Y*v2.Y + v1.Z*v2.Z
+}
+
+func UnitVector(v Vector) Vector {
+	return v.Divide(v.Length())
 }
