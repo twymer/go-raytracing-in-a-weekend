@@ -25,15 +25,15 @@ func main() {
 
 	for j := ny - 1; j >= 0; j-- {
 		for i := 0; i < nx; i++ {
-			var r float32 = float32(i) / float32(nx)
-			var g float32 = float32(j) / float32(ny)
-			var b float32 = .2
+			v := Vector{
+				float64(i) / float64(nx),
+				float64(j) / float64(ny),
+				0.2,
+			}
 
-			var ir int = int(255.99 * r)
-			var ig int = int(255.99 * g)
-			var ib int = int(255.99 * b)
+			v = v.Mul(255.99)
 
-			f.WriteString(fmt.Sprintf("%d %d %d\n", ir, ig, ib))
+			f.WriteString(fmt.Sprintf("%d %d %d\n", v.R(), v.G(), v.B()))
 		}
 	}
 
