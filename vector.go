@@ -34,6 +34,14 @@ func (v1 Vector) Add(v2 Vector) Vector {
 	}
 }
 
+func (v Vector) AddFloat(t float64) Vector {
+	return Vector{
+		v.X + t,
+		v.Y + t,
+		v.Z + t,
+	}
+}
+
 func (v1 Vector) Subtract(v2 Vector) Vector {
 	return Vector{
 		v1.X - v2.X,
