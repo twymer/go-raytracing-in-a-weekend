@@ -1,6 +1,9 @@
 package main
 
-import "testing"
+import (
+	"github.com/stretchr/testify/assert"
+	"testing"
+)
 
 func TestPointAt(t *testing.T) {
 	v1 := Vector{0, 1, 0}
@@ -9,9 +12,5 @@ func TestPointAt(t *testing.T) {
 
 	result := ray.PointAt(5)
 
-	compareVectors(
-		t,
-		Vector{10, 16, 20},
-		result,
-	)
+	assert.EqualValues(t, Vector{10, 16, 20}, result)
 }
