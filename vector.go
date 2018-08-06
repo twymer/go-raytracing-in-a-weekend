@@ -70,7 +70,7 @@ func (v1 Vector) Cross(v2 Vector) Vector {
 	}
 }
 
-func (v1 Vector) Dot(v2 Vector) float64 {
+func Dot(v1, v2 Vector) float64 {
 	return v1.X*v2.X + v1.Y*v2.Y + v1.Z*v2.Z
 }
 

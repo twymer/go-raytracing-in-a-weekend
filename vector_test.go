@@ -52,7 +52,7 @@ func TestDotProduct(t *testing.T) {
 	v1 := Vector{1, 2, 3}
 	v2 := Vector{3, 4, 5}
 
-	result := v1.Dot(v2)
+	result := Dot(v1, v2)
 
 	assert.Equal(t, 26.0, result)
 }
