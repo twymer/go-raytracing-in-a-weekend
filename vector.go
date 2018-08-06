@@ -82,6 +82,6 @@ func Dot(v1, v2 Vector) float64 {
 	return v1.X*v2.X + v1.Y*v2.Y + v1.Z*v2.Z
 }
 
-func UnitVector(v Vector) Vector {
+func (v Vector) UnitVector() Vector {
 	return v.Divide(v.Length())
 }
