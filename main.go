@@ -39,7 +39,7 @@ func main() {
 	check(err)
 	defer f.Close()
 
-	nx, ny, ns := 200, 100, 100
+	nx, ny, ns := 400, 200, 100
 
 	f.WriteString("P3\n")
 	f.WriteString(fmt.Sprintf("%d %d\n", nx, ny))
