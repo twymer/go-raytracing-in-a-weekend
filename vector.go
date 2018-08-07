@@ -70,6 +70,10 @@ func (v Vector) Length() float64 {
 	return math.Sqrt(v.X*v.X + v.Y*v.Y + v.Z*v.Z)
 }
 
+func (v Vector) SquaredLength() float64 {
+	return v.X*v.X + v.Y*v.Y + v.Z*v.Z
+}
+
 func (v1 Vector) Cross(v2 Vector) Vector {
 	return Vector{
 		v1.Y*v2.Z - v1.Z*v2.Y,

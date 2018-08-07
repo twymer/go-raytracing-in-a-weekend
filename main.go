@@ -14,16 +14,31 @@ func check(e error) {
 	}
 }
 
+func randomInUnitSphere() Vector {
+	p := Vector{}
+	for {
+		p = Vector{
+			rand.Float64(),
+			rand.Float64(),
+			rand.Float64(),
+		}.Multiply(
+			2,
+		).Subtract(
+			Vector{1, 1, 1},
+		)
+
+		if p.SquaredLength() < 1.0 {
+			return p
+		}
+	}
+}
+
 func Color(r Ray, world Hitable) Vector {
 	hit, record := world.Hit(r, 0.0, math.Inf(0))
 
 	if hit {
-		v := Vector{
-			record.Normal.X,
-			record.Normal.Y,
-			record.Normal.Z,
-		}
-		return v.AddFloat(1).Multiply(.5)
+		target := record.P.Add(record.Normal).Add(randomInUnitSphere())
+		return Color(Ray{record.P, target.Subtract(record.P)}, world).Multiply(.5)
 	} else {
 		unitDirection := r.Direction.UnitVector()
 		t := .5 * (unitDirection.Y + 1)
