@@ -69,8 +69,8 @@ func main() {
 		[]Hitable{
 			Sphere{Vector{0, 0, -1}, .5, NewLambertian(Vector{.8, .3, .3})},
 			Sphere{Vector{0, -100.5, -1}, 100, NewLambertian(Vector{.8, .8, 0})},
-			Sphere{Vector{1, 0, -1}, .5, NewMetal(Vector{.8, .6, .2})},
-			Sphere{Vector{-1, 0, -1}, .5, NewMetal(Vector{.8, .8, .8})},
+			Sphere{Vector{1, 0, -1}, .5, NewMetal(Vector{.8, .6, .2}, .3)},
+			Sphere{Vector{-1, 0, -1}, .5, NewMetal(Vector{.8, .8, .8}, 1)},
 		},
 	}
 

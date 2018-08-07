@@ -21,15 +21,16 @@ func (m Lambertian) Scatter(r Ray, record HitRecord) (bool, Vector, Ray) {
 
 type Metal struct {
 	Albedo Vector
+	Fuzz   float64
 }
 
-func NewMetal(albedo Vector) Metal {
-	return Metal{albedo}
+func NewMetal(albedo Vector, fuzz float64) Metal {
+	return Metal{albedo, fuzz}
 }
 
 func (m Metal) Scatter(r Ray, record HitRecord) (bool, Vector, Ray) {
 	reflected := Reflect(r.Direction.UnitVector(), record.Normal)
-	scattered := Ray{record.P, reflected}
+	scattered := Ray{record.P, reflected.AddVector(RandomInUnitSphere().MultiplyFloat(m.Fuzz))}
 
 	return (Dot(scattered.Direction, record.Normal) > 0), m.Albedo, scattered
 }
