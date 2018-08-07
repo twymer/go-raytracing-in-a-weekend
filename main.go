@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math"
+	"math/rand"
 	"os"
 )
 
@@ -38,16 +39,11 @@ func main() {
 	check(err)
 	defer f.Close()
 
-	var nx, ny int = 200, 100
+	nx, ny, ns := 200, 100, 100
 
 	f.WriteString("P3\n")
 	f.WriteString(fmt.Sprintf("%d %d\n", nx, ny))
 	f.WriteString("255\n")
-
-	lower_left := Vector{-2, -1, -1}
-	horizontal := Vector{4, 0, 0}
-	vertical := Vector{0, 2, 0}
-	origin := Vector{0, 0, 0}
 
 	world := HitableList{
 		[]Hitable{
@@ -56,22 +52,21 @@ func main() {
 		},
 	}
 
+	cam := NewCamera()
+
 	for j := ny - 1; j >= 0; j-- {
 		for i := 0; i < nx; i++ {
-			u := float64(i) / float64(nx)
-			v := float64(j) / float64(ny)
+			color := Vector{0, 0, 0}
 
-			r := Ray{
-				origin,
-				lower_left.Add(
-					horizontal.Multiply(u),
-				).Add(
-					vertical.Multiply(v),
-				),
+			for s := 0; s < ns; s++ {
+				u := (float64(i) + rand.Float64()) / float64(nx)
+				v := (float64(j) + rand.Float64()) / float64(ny)
+
+				r := cam.GetRay(u, v)
+				color = color.Add(Color(r, world))
 			}
 
-			color := Color(r, world)
-			color = color.Multiply(255.99)
+			color = color.Divide(float64(ns)).Multiply(255.99)
 
 			f.WriteString(
 				fmt.Sprintf("%d %d %d\n", color.R(), color.G(), color.B()),
