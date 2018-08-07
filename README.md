@@ -1,4 +1,4 @@
-# go-raytracing-in-a-weekend
+# Ray Tracer in Go
 
 Working through Peter Shriley's [Ray Tracing in a Weekend](https://www.amazon.com/Ray-Tracing-Weekend-Minibooks-Book-ebook/dp/B01B5AODD8) book as an exercise to learn Go. Not likely very idiomatic Go as I'm following exercises written in C and this is the first thing I've done in Go. My main goal is use this as a base to play with goroutines/channels after completion.
 
