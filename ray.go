@@ -7,11 +7,11 @@ type Ray struct {
 }
 
 func (r Ray) PointAt(t float64) Vector {
-	return r.Origin.Add(r.Direction.Multiply(t))
+	return r.Origin.AddVector(r.Direction.MultiplyFloat(t))
 }
 
 func (r Ray) HitSphere(center Vector, radius float64) float64 {
-	oc := r.Origin.Subtract(center)
+	oc := r.Origin.SubtractVector(center)
 	a := Dot(r.Direction, r.Direction)
 	b := 2 * Dot(oc, r.Direction)
 	c := Dot(oc, oc) - radius*radius

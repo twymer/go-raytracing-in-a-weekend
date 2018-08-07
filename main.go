@@ -14,16 +14,16 @@ func check(e error) {
 	}
 }
 
-func randomInUnitSphere() Vector {
+func RandomInUnitSphere() Vector {
 	p := Vector{}
 	for {
 		p = Vector{
 			rand.Float64(),
 			rand.Float64(),
 			rand.Float64(),
-		}.Multiply(
+		}.MultiplyFloat(
 			2,
-		).Subtract(
+		).SubtractVector(
 			Vector{1, 1, 1},
 		)
 
@@ -33,17 +33,22 @@ func randomInUnitSphere() Vector {
 	}
 }
 
-func Color(r Ray, world Hitable) Vector {
+func Color(r Ray, world Hitable, depth int) Vector {
 	hit, record := world.Hit(r, 0.001, math.Inf(0))
 
 	if hit {
-		target := record.P.Add(record.Normal).Add(randomInUnitSphere())
-		return Color(Ray{record.P, target.Subtract(record.P)}, world).Multiply(.5)
+		wat, attenuation, scattered := record.Material.Scatter(r, record)
+
+		if depth < 50 && wat {
+			return attenuation.MultiplyVector(Color(scattered, world, depth+1))
+		} else {
+			return Vector{0, 0, 0}
+		}
 	} else {
 		unitDirection := r.Direction.UnitVector()
 		t := .5 * (unitDirection.Y + 1)
-		return Vector{1, 1, 1}.Multiply(1 - t).Add(
-			Vector{.5, .7, 1}.Multiply(t),
+		return Vector{1, 1, 1}.MultiplyFloat(1 - t).AddVector(
+			Vector{.5, .7, 1}.MultiplyFloat(t),
 		)
 	}
 
@@ -62,8 +67,10 @@ func main() {
 
 	world := HitableList{
 		[]Hitable{
-			Sphere{Vector{0, 0, -1}, .5},
-			Sphere{Vector{0, -100.5, -1}, 100},
+			Sphere{Vector{0, 0, -1}, .5, NewLambertian(Vector{.8, .3, .3})},
+			Sphere{Vector{0, -100.5, -1}, 100, NewLambertian(Vector{.8, .8, 0})},
+			Sphere{Vector{1, 0, -1}, .5, NewMetal(Vector{.8, .6, .2})},
+			Sphere{Vector{-1, 0, -1}, .5, NewMetal(Vector{.8, .8, .8})},
 		},
 	}
 
@@ -78,12 +85,12 @@ func main() {
 				v := (float64(j) + rand.Float64()) / float64(ny)
 
 				r := cam.GetRay(u, v)
-				color = color.Add(Color(r, world))
+				color = color.AddVector(Color(r, world, 0))
 			}
 
-			color = color.Divide(float64(ns))
+			color = color.DivideFloat(float64(ns))
 			color = Vector{math.Sqrt(color.X), math.Sqrt(color.Y), math.Sqrt(color.Z)}
-			color = color.Multiply(255.99)
+			color = color.MultiplyFloat(255.99)
 
 			f.WriteString(
 				fmt.Sprintf("%d %d %d\n", color.R(), color.G(), color.B()),

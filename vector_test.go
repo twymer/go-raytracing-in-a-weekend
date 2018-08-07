@@ -9,7 +9,7 @@ func TestAddition(t *testing.T) {
 	v1 := Vector{1, 1, 1}
 	v2 := Vector{0, 1, 2}
 
-	result := v1.Add(v2)
+	result := v1.AddVector(v2)
 
 	assert.EqualValues(t, Vector{1, 2, 3}, result)
 }
@@ -18,7 +18,7 @@ func TestSubtraction(t *testing.T) {
 	v1 := Vector{1, 1, 1}
 	v2 := Vector{0, 1, 2}
 
-	result := v1.Subtract(v2)
+	result := v1.SubtractVector(v2)
 
 	assert.EqualValues(t, Vector{1, 0, -1}, result)
 }
@@ -26,7 +26,7 @@ func TestSubtraction(t *testing.T) {
 func TestMultiplication(t *testing.T) {
 	v := Vector{0, 1, 2}
 
-	result := v.Multiply(4)
+	result := v.MultiplyFloat(4)
 
 	assert.EqualValues(t, Vector{0, 4, 8}, result)
 }
@@ -34,7 +34,7 @@ func TestMultiplication(t *testing.T) {
 func TestDivide(t *testing.T) {
 	v := Vector{0, 5, 10}
 
-	result := v.Divide(2)
+	result := v.DivideFloat(2)
 
 	assert.EqualValues(t, Vector{0, 2.5, 5}, result)
 }

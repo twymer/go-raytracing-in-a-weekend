@@ -16,6 +16,6 @@ func NewCamera() Camera {
 func (cam Camera) GetRay(u, v float64) Ray {
 	return Ray{
 		cam.Origin,
-		cam.LowerLeftCorner.Add(cam.Horizontal.Multiply(u).Add(cam.Vertical.Multiply(v)).Subtract(cam.Origin)),
+		cam.LowerLeftCorner.AddVector(cam.Horizontal.MultiplyFloat(u).AddVector(cam.Vertical.MultiplyFloat(v)).SubtractVector(cam.Origin)),
 	}
 }

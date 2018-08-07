@@ -26,7 +26,7 @@ func (v Vector) Array() [3]float64 {
 	}
 }
 
-func (v1 Vector) Add(v2 Vector) Vector {
+func (v1 Vector) AddVector(v2 Vector) Vector {
 	return Vector{
 		v1.X + v2.X,
 		v1.Y + v2.Y,
@@ -42,7 +42,7 @@ func (v Vector) AddFloat(t float64) Vector {
 	}
 }
 
-func (v1 Vector) Subtract(v2 Vector) Vector {
+func (v1 Vector) SubtractVector(v2 Vector) Vector {
 	return Vector{
 		v1.X - v2.X,
 		v1.Y - v2.Y,
@@ -50,7 +50,7 @@ func (v1 Vector) Subtract(v2 Vector) Vector {
 	}
 }
 
-func (v Vector) Multiply(t float64) Vector {
+func (v Vector) MultiplyFloat(t float64) Vector {
 	return Vector{
 		v.X * t,
 		v.Y * t,
@@ -58,7 +58,15 @@ func (v Vector) Multiply(t float64) Vector {
 	}
 }
 
-func (v Vector) Divide(t float64) Vector {
+func (v1 Vector) MultiplyVector(v2 Vector) Vector {
+	return Vector{
+		v1.X * v2.X,
+		v1.Y * v2.Y,
+		v1.Z * v2.Z,
+	}
+}
+
+func (v Vector) DivideFloat(t float64) Vector {
 	return Vector{
 		v.X / t,
 		v.Y / t,
@@ -87,5 +95,9 @@ func Dot(v1, v2 Vector) float64 {
 }
 
 func (v Vector) UnitVector() Vector {
-	return v.Divide(v.Length())
+	return v.DivideFloat(v.Length())
+}
+
+func Reflect(v, n Vector) Vector {
+	return v.SubtractVector(n.MultiplyFloat(2 * Dot(v, n)))
 }
