@@ -81,7 +81,9 @@ func main() {
 				color = color.Add(Color(r, world))
 			}
 
-			color = color.Divide(float64(ns)).Multiply(255.99)
+			color = color.Divide(float64(ns))
+			color = Vector{math.Sqrt(color.X), math.Sqrt(color.Y), math.Sqrt(color.Z)}
+			color = color.Multiply(255.99)
 
 			f.WriteString(
 				fmt.Sprintf("%d %d %d\n", color.R(), color.G(), color.B()),
