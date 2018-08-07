@@ -34,7 +34,7 @@ func randomInUnitSphere() Vector {
 }
 
 func Color(r Ray, world Hitable) Vector {
-	hit, record := world.Hit(r, 0.0, math.Inf(0))
+	hit, record := world.Hit(r, 0.001, math.Inf(0))
 
 	if hit {
 		target := record.P.Add(record.Normal).Add(randomInUnitSphere())
