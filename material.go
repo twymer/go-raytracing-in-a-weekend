@@ -1,5 +1,10 @@
 package main
 
+import (
+	"math"
+	"math/rand"
+)
+
 type Material interface {
 	Scatter(r Ray, record HitRecord) (bool, Vector, Ray)
 }
@@ -44,24 +49,43 @@ func NewDielectric(refIndex float64) Dielectric {
 }
 
 func (m Dielectric) Scatter(r Ray, record HitRecord) (bool, Vector, Ray) {
-	reflected := Reflect(r.Direction, record.Normal)
 	outwardNormal := Vector{}
-	niOverNt := 0.0
+	scattered := Ray{}
+	reflected := Reflect(r.Direction, record.Normal)
+	niOverNt, cosine, reflectProb := 0.0, 0.0, 0.0
 	attenuation := Vector{1, 1, 1}
 
 	if Dot(r.Direction, record.Normal) > 0 {
 		outwardNormal = record.Normal.MultiplyFloat(-1)
 		niOverNt = m.RefractionIndex
+		cosine = m.RefractionIndex * Dot(r.Direction, record.Normal) / r.Direction.Length()
 	} else {
 		outwardNormal = record.Normal
 		niOverNt = 1 / m.RefractionIndex
+		cosine = -Dot(r.Direction, record.Normal) / r.Direction.Length()
 	}
 
 	refractionPossible, refracted := Refract(r.Direction, outwardNormal, niOverNt)
 
 	if refractionPossible {
-		return true, attenuation, Ray{record.P, refracted}
+		reflectProb = schlick(cosine, m.RefractionIndex)
 	} else {
-		return false, attenuation, Ray{record.P, reflected}
+		reflectProb = 1.0
+		scattered = Ray{record.P, reflected}
 	}
+
+	if rand.Float64() < reflectProb {
+		scattered = Ray{record.P, reflected}
+	} else {
+		scattered = Ray{record.P, refracted}
+	}
+
+	return true, attenuation, scattered
+}
+
+func schlick(cosine, refractionIndex float64) float64 {
+	r0 := (1 - refractionIndex) / (1 + refractionIndex)
+	r0 = r0 * r0
+
+	return r0 + (1-r0)*math.Pow((1-cosine), 5)
 }
