@@ -50,6 +50,14 @@ func (v1 Vector) SubtractVector(v2 Vector) Vector {
 	}
 }
 
+func (v Vector) SubtractFloat(t float64) Vector {
+	return Vector{
+		v.X - t,
+		v.Y - t,
+		v.Z - t,
+	}
+}
+
 func (v Vector) MultiplyFloat(t float64) Vector {
 	return Vector{
 		v.X * t,
@@ -100,4 +108,16 @@ func (v Vector) UnitVector() Vector {
 
 func Reflect(v, n Vector) Vector {
 	return v.SubtractVector(n.MultiplyFloat(2 * Dot(v, n)))
+}
+
+func Refract(v, n Vector, niOverNt float64) (bool, Vector) {
+	uv := v.UnitVector()
+	dt := Dot(uv, n)
+	discriminant := 1 - niOverNt*niOverNt*(1-dt*dt)
+
+	if discriminant > 0 {
+		return true, uv.SubtractVector(n.MultiplyFloat(dt)).MultiplyFloat(niOverNt).SubtractVector(n.MultiplyFloat(math.Sqrt(discriminant)))
+	} else {
+		return false, Vector{}
+	}
 }
