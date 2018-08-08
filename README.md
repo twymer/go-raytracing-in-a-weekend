@@ -4,7 +4,8 @@ Working through Peter Shriley's [Ray Tracing in a Weekend](https://www.amazon.co
 
 ![Image of Progress](output.jpg)
 
-Takeaways:
+Takeaways/Thoughts:
 - I wrote tests for the vector class to get an understanding of writing tests in Go. Definitely miss Rspec and still don't think I agree with not having assertions in the standard test library but [Testify](https://github.com/stretchr/testify) seems nice.
 - Not being able to override arithmetic operators make the code for this _really_ clunky at times.
 - I don't like the decision to not support method overloading, as having to define something like `.MultiplyByVector(v Vector)` and `.MultiplyByFloat(t float64)` is painful, but this slides into not being able to override the arthimetic operators as well.
+- Should be using pointers to reduce memory footprint, hoping to try to do profiling of this to see numerical improvements when refactoring at the end.
