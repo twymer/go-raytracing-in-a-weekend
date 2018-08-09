@@ -65,17 +65,16 @@ func main() {
 	f.WriteString(fmt.Sprintf("%d %d\n", nx, ny))
 	f.WriteString("255\n")
 
+	r := math.Cos(math.Pi / 4)
+
 	world := HitableList{
 		[]Hitable{
-			Sphere{Vector{0, 0, -1}, .5, NewLambertian(Vector{.1, .2, .5})},
-			Sphere{Vector{0, -100.5, -1}, 100, NewLambertian(Vector{.8, .8, 0})},
-			Sphere{Vector{1, 0, -1}, .5, NewMetal(Vector{.8, .6, .2}, .3)},
-			Sphere{Vector{-1, 0, -1}, .5, NewDielectric(1.5)},
-			Sphere{Vector{-1, 0, -1}, -.45, NewDielectric(1.5)},
+			Sphere{Vector{-r, 0, -1}, r, NewLambertian(Vector{0, 0, 1})},
+			Sphere{Vector{r, 0, -1}, r, NewLambertian(Vector{1, 0, 0})},
 		},
 	}
 
-	cam := NewCamera()
+	cam := NewCamera(90, float64(nx)/float64(ny))
 
 	for j := ny - 1; j >= 0; j-- {
 		for i := 0; i < nx; i++ {

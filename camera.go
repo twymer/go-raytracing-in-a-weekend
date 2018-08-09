@@ -1,14 +1,20 @@
 package main
 
+import "math"
+
 type Camera struct {
 	LowerLeftCorner, Horizontal, Vertical, Origin Vector
 }
 
-func NewCamera() Camera {
+func NewCamera(vfov, aspect float64) Camera {
+	theta := vfov * math.Pi / 180
+	halfHeight := math.Tan(theta / 2)
+	halfWidth := aspect * halfHeight
+
 	return Camera{
-		Vector{-2, -1, -1},
-		Vector{4, 0, 0},
-		Vector{0, 2, 0},
+		Vector{-halfWidth, -halfHeight, -1},
+		Vector{2 * halfWidth, 0, 0},
+		Vector{0, 2 * halfHeight, 0},
 		Vector{0, 0, 0},
 	}
 }
