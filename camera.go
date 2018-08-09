@@ -52,7 +52,7 @@ func randomInUnitDisk() Vector {
 	p := Vector{}
 	for {
 		p = Vector{rand.Float64(), rand.Float64(), 0}.MultiplyFloat(2).SubtractVector(Vector{1, 1, 0})
-		if Dot(p, p) >= 1.0 {
+		if Dot(p, p) < 1.0 {
 			return p
 		}
 	}
