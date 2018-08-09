@@ -51,7 +51,90 @@ func Color(r Ray, world Hitable, depth int) Vector {
 			Vector{.5, .7, 1}.MultiplyFloat(t),
 		)
 	}
+}
 
+func randomScene() []Hitable {
+	// Due to loop being nested -11 -> 11 and us adding one manually
+	n := 22*22 + 1
+
+	list := make([]Hitable, n)
+
+	list[0] = Sphere{
+		Vector{0, -1000, 0},
+		1000,
+		NewLambertian(Vector{.5, .5, .5}),
+	}
+
+	i := 1
+
+	for a := -11; a < 11; a++ {
+		for b := -11; b < 11; b++ {
+			chooseMat := rand.Float64()
+			center := Vector{
+				float64(a) + .9*rand.Float64(),
+				.2,
+				float64(b) + .9*rand.Float64(),
+			}
+
+			if (center.SubtractVector(Vector{4, .2, 0}).Length() > .9) {
+				if chooseMat < .8 {
+					// Diffuse
+					list[i] = Sphere{
+						center,
+						.2,
+						NewLambertian(
+							Vector{
+								rand.Float64() * rand.Float64(),
+								rand.Float64() * rand.Float64(),
+								rand.Float64() * rand.Float64(),
+							},
+						),
+					}
+				} else if chooseMat < .95 {
+					// Metal
+					list[i] = Sphere{
+						center,
+						.2,
+						NewMetal(
+							Vector{
+								.5 * (1 + rand.Float64()),
+								.5 * (1 + rand.Float64()),
+								.5 * (1 + rand.Float64()),
+							},
+							.5*rand.Float64(),
+						),
+					}
+				} else {
+					// Glass
+					list[i] = Sphere{
+						center,
+						.2,
+						NewDielectric(1.5),
+					}
+				}
+
+				i++
+			}
+		}
+	}
+
+	list[i] = Sphere{Vector{0, 1, 0}, 1, NewDielectric(1.5)}
+	i++
+
+	list[i] = Sphere{
+		Vector{-4, 1, 0},
+		1,
+		NewLambertian(Vector{.4, .2, .1}),
+	}
+	i++
+
+	list[i] = Sphere{
+		Vector{4, 1, 0},
+		1,
+		NewMetal(Vector{.7, .6, .5}, 0),
+	}
+
+	return list
 }
 
 func main() {
@@ -59,24 +142,16 @@ func main() {
 	check(err)
 	defer f.Close()
 
-	nx, ny, ns := 400, 200, 100
+	nx, ny, ns := 800, 500, 10
 
 	f.WriteString("P3\n")
 	f.WriteString(fmt.Sprintf("%d %d\n", nx, ny))
 	f.WriteString("255\n")
 
-	world := HitableList{
-		[]Hitable{
-			Sphere{Vector{0, 0, -1}, .5, NewLambertian(Vector{.1, .2, .5})},
-			Sphere{Vector{0, -100.5, -1}, 100, NewLambertian(Vector{.8, .8, 0})},
-			Sphere{Vector{1, 0, -1}, .5, NewMetal(Vector{.8, .6, .2}, .3)},
-			Sphere{Vector{-1, 0, -1}, .5, NewDielectric(1.5)},
-			Sphere{Vector{-1, 0, -1}, -.45, NewDielectric(1.5)},
-		},
-	}
+	world := HitableList{randomScene()}
 
-	lookFrom := Vector{3, 3, 2}
-	lookAt := Vector{0, 0, -1}
+	lookFrom := Vector{13, 2, 3}
+	lookAt := Vector{0, 0, 0}
 
 	cam := NewCamera(
 		lookFrom,
@@ -84,8 +159,8 @@ func main() {
 		Vector{0, 1, 0},
 		20,
 		float64(nx)/float64(ny),
-		2.0,
-		(lookFrom.SubtractVector(lookAt)).Length(),
+		.1,
+		10,
 	)
 
 	for j := ny - 1; j >= 0; j-- {
