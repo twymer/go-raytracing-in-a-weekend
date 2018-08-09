@@ -75,12 +75,17 @@ func main() {
 		},
 	}
 
+	lookFrom := Vector{3, 3, 2}
+	lookAt := Vector{0, 0, -1}
+
 	cam := NewCamera(
-		Vector{-2, 2, 1},
-		Vector{0, 0, -1},
+		lookFrom,
+		lookAt,
 		Vector{0, 1, 0},
-		35,
+		20,
 		float64(nx)/float64(ny),
+		2.0,
+		(lookFrom.SubtractVector(lookAt)).Length(),
 	)
 
 	for j := ny - 1; j >= 0; j-- {
