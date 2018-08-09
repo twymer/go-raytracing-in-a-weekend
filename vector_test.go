@@ -43,7 +43,7 @@ func TestCrossProduct(t *testing.T) {
 	v1 := Vector{1, 2, 3}
 	v2 := Vector{3, 4, 5}
 
-	result := v1.Cross(v2)
+	result := Cross(v1, v2)
 
 	assert.EqualValues(t, Vector{-2, 4, -2}, result)
 }

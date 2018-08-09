@@ -90,7 +90,7 @@ func (v Vector) SquaredLength() float64 {
 	return v.X*v.X + v.Y*v.Y + v.Z*v.Z
 }
 
-func (v1 Vector) Cross(v2 Vector) Vector {
+func Cross(v1, v2 Vector) Vector {
 	return Vector{
 		v1.Y*v2.Z - v1.Z*v2.Y,
 		-(v1.X*v2.Z - v1.Z*v2.X),

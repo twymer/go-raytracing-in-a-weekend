@@ -6,16 +6,23 @@ type Camera struct {
 	LowerLeftCorner, Horizontal, Vertical, Origin Vector
 }
 
-func NewCamera(vfov, aspect float64) Camera {
+func NewCamera(lookFrom, lookAt, up Vector, vfov, aspect float64) Camera {
 	theta := vfov * math.Pi / 180
 	halfHeight := math.Tan(theta / 2)
 	halfWidth := aspect * halfHeight
 
+	w := lookFrom.SubtractVector(lookAt).UnitVector()
+	u := Cross(up, w).UnitVector()
+	v := Cross(w, u)
+
+	// lowerLeft := Vector{-halfWidth, -halfHeight, -1}
+	lowerLeft := lookFrom.SubtractVector(u.MultiplyFloat(halfWidth)).SubtractVector(v.MultiplyFloat(halfHeight)).SubtractVector(w)
+
 	return Camera{
-		Vector{-halfWidth, -halfHeight, -1},
-		Vector{2 * halfWidth, 0, 0},
-		Vector{0, 2 * halfHeight, 0},
-		Vector{0, 0, 0},
+		lowerLeft,
+		u.MultiplyFloat(2 * halfWidth),
+		v.MultiplyFloat(2 * halfHeight),
+		lookFrom,
 	}
 }
 
