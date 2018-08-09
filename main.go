@@ -65,8 +65,6 @@ func main() {
 	f.WriteString(fmt.Sprintf("%d %d\n", nx, ny))
 	f.WriteString("255\n")
 
-	// r := math.Cos(math.Pi / 4)
-
 	world := HitableList{
 		[]Hitable{
 			Sphere{Vector{0, 0, -1}, .5, NewLambertian(Vector{.1, .2, .5})},
@@ -81,7 +79,7 @@ func main() {
 		Vector{-2, 2, 1},
 		Vector{0, 0, -1},
 		Vector{0, 1, 0},
-		90,
+		35,
 		float64(nx)/float64(ny),
 	)
 

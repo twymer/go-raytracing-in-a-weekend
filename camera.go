@@ -15,7 +15,6 @@ func NewCamera(lookFrom, lookAt, up Vector, vfov, aspect float64) Camera {
 	u := Cross(up, w).UnitVector()
 	v := Cross(w, u)
 
-	// lowerLeft := Vector{-halfWidth, -halfHeight, -1}
 	lowerLeft := lookFrom.SubtractVector(u.MultiplyFloat(halfWidth)).SubtractVector(v.MultiplyFloat(halfHeight)).SubtractVector(w)
 
 	return Camera{
