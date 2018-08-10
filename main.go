@@ -142,7 +142,7 @@ func main() {
 	check(err)
 	defer f.Close()
 
-	nx, ny, ns := 800, 500, 10
+	nx, ny, ns := 800, 500, 100
 
 	f.WriteString("P3\n")
 	f.WriteString(fmt.Sprintf("%d %d\n", nx, ny))
