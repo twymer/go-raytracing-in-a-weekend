@@ -117,7 +117,6 @@ func Refract(v, n Vector, niOverNt float64) (bool, Vector) {
 
 	if discriminant > 0 {
 		return true, uv.SubtractVector(n.MultiplyFloat(dt)).MultiplyFloat(niOverNt).SubtractVector(n.MultiplyFloat(math.Sqrt(discriminant)))
-	} else {
-		return false, Vector{}
 	}
+	return false, Vector{}
 }
