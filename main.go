@@ -5,6 +5,9 @@ import (
 	"math"
 	"math/rand"
 	"os"
+	"runtime"
+	"runtime/pprof"
+	"time"
 )
 
 // Stolen from gobyexample.com
@@ -142,7 +145,7 @@ func main() {
 	check(err)
 	defer f.Close()
 
-	nx, ny, ns := 800, 500, 100
+	nx, ny, ns := 200, 100, 10
 
 	f.WriteString("P3\n")
 	f.WriteString(fmt.Sprintf("%d %d\n", nx, ny))
@@ -184,6 +187,12 @@ func main() {
 			)
 		}
 	}
+
+	time.Sleep(500 * time.Millisecond)
+	pf, _ := os.Create("mem.prof")
+	defer pf.Close()
+	runtime.GC()
+	pprof.WriteHeapProfile(pf)
 
 	f.Sync()
 }
