@@ -7,17 +7,17 @@ type HitRecord struct {
 }
 
 type Hitable interface {
-	Hit(r *Ray, tMin, tMax float64) (bool, HitRecord)
+	Hit(r *Ray, tMin, tMax float64) (bool, *HitRecord)
 }
 
 type HitableList struct {
 	List []Hitable
 }
 
-func (hl HitableList) Hit(r *Ray, tMin, tMax float64) (bool, HitRecord) {
+func (hl HitableList) Hit(r *Ray, tMin, tMax float64) (bool, *HitRecord) {
 	hitAnything := false
 	closest := tMax
-	closestPoint := HitRecord{}
+	var closestPoint *HitRecord = nil
 
 	for _, hitable := range hl.List {
 		hit, hitRecord := hitable.Hit(r, tMin, closest)
