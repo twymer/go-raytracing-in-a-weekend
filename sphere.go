@@ -8,7 +8,7 @@ type Sphere struct {
 	Material Material // TODO how is this actually ok?
 }
 
-func (s Sphere) Hit(r Ray, tMin, tMax float64) (bool, HitRecord) {
+func (s Sphere) Hit(r *Ray, tMin, tMax float64) (bool, HitRecord) {
 	oc := r.Origin.SubtractVector(s.Center)
 	a := Dot(r.Direction, r.Direction)
 	b := Dot(oc, r.Direction)

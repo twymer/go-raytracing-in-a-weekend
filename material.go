@@ -6,7 +6,7 @@ import (
 )
 
 type Material interface {
-	Scatter(r Ray, record HitRecord) (bool, Vector, Ray)
+	Scatter(r *Ray, record HitRecord) (bool, Vector, *Ray)
 }
 
 type Lambertian struct {
@@ -17,9 +17,9 @@ func NewLambertian(albedo Vector) Lambertian {
 	return Lambertian{albedo}
 }
 
-func (m Lambertian) Scatter(r Ray, record HitRecord) (bool, Vector, Ray) {
+func (m Lambertian) Scatter(r *Ray, record HitRecord) (bool, Vector, *Ray) {
 	target := record.P.AddVector(record.Normal).AddVector(RandomInUnitSphere())
-	scattered := Ray{record.P, target.SubtractVector(record.P)}
+	scattered := &Ray{record.P, target.SubtractVector(record.P)}
 
 	return true, m.Albedo, scattered
 }
@@ -33,9 +33,9 @@ func NewMetal(albedo Vector, fuzz float64) Metal {
 	return Metal{albedo, fuzz}
 }
 
-func (m Metal) Scatter(r Ray, record HitRecord) (bool, Vector, Ray) {
+func (m Metal) Scatter(r *Ray, record HitRecord) (bool, Vector, *Ray) {
 	reflected := Reflect(r.Direction.UnitVector(), record.Normal)
-	scattered := Ray{record.P, reflected.AddVector(RandomInUnitSphere().MultiplyFloat(m.Fuzz))}
+	scattered := &Ray{record.P, reflected.AddVector(RandomInUnitSphere().MultiplyFloat(m.Fuzz))}
 
 	return (Dot(scattered.Direction, record.Normal) > 0), m.Albedo, scattered
 }
@@ -48,7 +48,7 @@ func NewDielectric(refIndex float64) Dielectric {
 	return Dielectric{refIndex}
 }
 
-func (m Dielectric) Scatter(r Ray, record HitRecord) (bool, Vector, Ray) {
+func (m Dielectric) Scatter(r *Ray, record HitRecord) (bool, Vector, *Ray) {
 	outwardNormal := Vector{}
 	scattered := Ray{}
 	reflected := Reflect(r.Direction, record.Normal)
@@ -80,7 +80,7 @@ func (m Dielectric) Scatter(r Ray, record HitRecord) (bool, Vector, Ray) {
 		scattered = Ray{record.P, refracted}
 	}
 
-	return true, attenuation, scattered
+	return true, attenuation, &scattered
 }
 
 func schlick(cosine, refractionIndex float64) float64 {

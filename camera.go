@@ -38,11 +38,11 @@ func NewCamera(lookFrom, lookAt, up Vector, vfov, aspect, aperature, focusDist f
 	}
 }
 
-func (cam Camera) GetRay(s, t float64) Ray {
+func (cam Camera) GetRay(s, t float64) *Ray {
 	rd := randomInUnitDisk().MultiplyFloat(cam.LensRadius)
 	offset := cam.U.MultiplyFloat(rd.X).AddVector(cam.V.MultiplyFloat(rd.Y))
 
-	return Ray{
+	return &Ray{
 		cam.Origin.AddVector(offset),
 		cam.LowerLeftCorner.AddVector(cam.Horizontal.MultiplyFloat(s)).AddVector(cam.Vertical.MultiplyFloat(t)).SubtractVector(cam.Origin).SubtractVector(offset),
 	}
