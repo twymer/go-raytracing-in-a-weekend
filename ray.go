@@ -19,7 +19,8 @@ func (r Ray) HitSphere(center Vector, radius float64) float64 {
 
 	if discriminant < 0 {
 		return -1
-	} else {
-		return (-b - math.Sqrt(discriminant)) / (2 * a)
 	}
+
+	return (-b - math.Sqrt(discriminant)) / (2 * a)
+
 }
