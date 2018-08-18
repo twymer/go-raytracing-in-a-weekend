@@ -181,16 +181,19 @@ func computePixelColor(i, j, nx, ny, ns int, cam Camera, world HitableList) [3]i
 
 var cpuprofile = flag.Bool("cpuprofile", false, "write cpu profile")
 var memprofile = flag.Bool("memprofile", true, "write memory profile")
+var width = flag.Int("width", 200, "width in pixels")
+var height = flag.Int("height", 100, "height in pixels")
+var sampling = flag.Int("sampling", 100, "samples per pixels")
 
 func main() {
 	flag.Parse()
 
 	if *cpuprofile {
-		f, err := os.Create("cpu.prof")
+		cf, err := os.Create("cpu.prof")
 		if err != nil {
 			log.Fatal("could not create CPU profile: ", err)
 		}
-		if err := pprof.StartCPUProfile(f); err != nil {
+		if err := pprof.StartCPUProfile(cf); err != nil {
 			log.Fatal("could not start CPU profile: ", err)
 		}
 		defer pprof.StopCPUProfile()
