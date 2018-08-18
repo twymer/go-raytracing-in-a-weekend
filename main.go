@@ -203,7 +203,9 @@ func main() {
 	check(err)
 	defer f.Close()
 
-	nx, ny, ns := 200, 100, 10
+	nx := *width
+	ny := *height
+	ns := *sampling
 
 	f.WriteString("P3\n")
 	f.WriteString(fmt.Sprintf("%d %d\n", nx, ny))
