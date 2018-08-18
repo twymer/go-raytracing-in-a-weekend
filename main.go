@@ -1,7 +1,9 @@
 package main
 
 import (
+	"flag"
 	"fmt"
+	"log"
 	"math"
 	"math/rand"
 	"os"
@@ -140,7 +142,23 @@ func randomScene() []Hitable {
 	return list
 }
 
+var cpuprofile = flag.Bool("cpuprofile", false, "write cpu profile")
+var memprofile = flag.Bool("memprofile", true, "write memory profile")
+
 func main() {
+	flag.Parse()
+
+	if *cpuprofile {
+		f, err := os.Create("cpu.prof")
+		if err != nil {
+			log.Fatal("could not create CPU profile: ", err)
+		}
+		if err := pprof.StartCPUProfile(f); err != nil {
+			log.Fatal("could not start CPU profile: ", err)
+		}
+		defer pprof.StopCPUProfile()
+	}
+
 	f, err := os.Create("output.ppm")
 	check(err)
 	defer f.Close()
@@ -188,11 +206,13 @@ func main() {
 		}
 	}
 
-	time.Sleep(500 * time.Millisecond)
-	pf, _ := os.Create("mem.prof")
-	defer pf.Close()
-	runtime.GC()
-	pprof.WriteHeapProfile(pf)
+	if *memprofile {
+		time.Sleep(500 * time.Millisecond)
+		pf, _ := os.Create("mem.prof")
+		defer pf.Close()
+		runtime.GC()
+		pprof.WriteHeapProfile(pf)
+	}
 
 	f.Sync()
 }
