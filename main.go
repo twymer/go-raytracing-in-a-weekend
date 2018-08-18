@@ -142,6 +142,43 @@ func randomScene() []Hitable {
 	return list
 }
 
+func initializeCamera(nx, ny int) Camera {
+	lookFrom := Vector{13, 2, 3}
+	lookAt := Vector{0, 0, 0}
+
+	return NewCamera(
+		lookFrom,
+		lookAt,
+		Vector{0, 1, 0},
+		20,
+		float64(nx)/float64(ny),
+		.1,
+		10,
+	)
+}
+
+func computePixelColor(i, j, nx, ny, ns int, cam Camera, world HitableList) [3]int {
+	color := Vector{0, 0, 0}
+
+	for s := 0; s < ns; s++ {
+		u := (float64(i) + rand.Float64()) / float64(nx)
+		v := (float64(j) + rand.Float64()) / float64(ny)
+
+		r := cam.GetRay(u, v)
+		color = color.AddVector(Color(r, world, 0))
+	}
+
+	color = color.DivideFloat(float64(ns))
+	color = Vector{math.Sqrt(color.X), math.Sqrt(color.Y), math.Sqrt(color.Z)}
+	color = color.MultiplyFloat(255.99)
+
+	return [3]int{
+		color.R(),
+		color.G(),
+		color.B(),
+	}
+}
+
 var cpuprofile = flag.Bool("cpuprofile", false, "write cpu profile")
 var memprofile = flag.Bool("memprofile", true, "write memory profile")
 
@@ -171,37 +208,22 @@ func main() {
 
 	world := HitableList{randomScene()}
 
-	lookFrom := Vector{13, 2, 3}
-	lookAt := Vector{0, 0, 0}
-
-	cam := NewCamera(
-		lookFrom,
-		lookAt,
-		Vector{0, 1, 0},
-		20,
-		float64(nx)/float64(ny),
-		.1,
-		10,
-	)
+	cam := initializeCamera(nx, ny)
 
 	for j := ny - 1; j >= 0; j-- {
 		for i := 0; i < nx; i++ {
-			color := Vector{0, 0, 0}
-
-			for s := 0; s < ns; s++ {
-				u := (float64(i) + rand.Float64()) / float64(nx)
-				v := (float64(j) + rand.Float64()) / float64(ny)
-
-				r := cam.GetRay(u, v)
-				color = color.AddVector(Color(r, world, 0))
-			}
-
-			color = color.DivideFloat(float64(ns))
-			color = Vector{math.Sqrt(color.X), math.Sqrt(color.Y), math.Sqrt(color.Z)}
-			color = color.MultiplyFloat(255.99)
+			pixelColor := computePixelColor(
+				i,
+				j,
+				nx,
+				ny,
+				ns,
+				cam,
+				world,
+			)
 
 			f.WriteString(
-				fmt.Sprintf("%d %d %d\n", color.R(), color.G(), color.B()),
+				fmt.Sprintf("%d %d %d\n", pixelColor[0], pixelColor[1], pixelColor[2]),
 			)
 		}
 	}
