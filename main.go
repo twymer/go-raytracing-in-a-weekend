@@ -2,7 +2,9 @@ package main
 
 import (
 	"flag"
-	"fmt"
+	"image"
+	"image/color"
+	"image/png"
 	"log"
 	"math"
 	"math/rand"
@@ -199,7 +201,9 @@ func main() {
 		defer pprof.StopCPUProfile()
 	}
 
-	f, err := os.Create("output.ppm")
+	// Open file first even though we don't need it yet because if
+	// we wait until the end and can't open it .. that's annoying
+	f, err := os.Create("out.png")
 	check(err)
 	defer f.Close()
 
@@ -207,15 +211,13 @@ func main() {
 	ny := *height
 	ns := *sampling
 
-	f.WriteString("P3\n")
-	f.WriteString(fmt.Sprintf("%d %d\n", nx, ny))
-	f.WriteString("255\n")
+	img := image.NewRGBA(image.Rect(0, 0, nx, ny))
 
 	world := HitableList{randomScene()}
 
 	cam := initializeCamera(nx, ny)
 
-	for j := ny - 1; j >= 0; j-- {
+	for j := 0; j < ny; j++ {
 		for i := 0; i < nx; i++ {
 			pixelColor := computePixelColor(
 				i,
@@ -227,11 +229,20 @@ func main() {
 				world,
 			)
 
-			f.WriteString(
-				fmt.Sprintf("%d %d %d\n", pixelColor[0], pixelColor[1], pixelColor[2]),
+			img.Set(
+				i,
+				ny-1-j,
+				color.RGBA{
+					uint8(pixelColor[0]),
+					uint8(pixelColor[1]),
+					uint8(pixelColor[2]),
+					255,
+				},
 			)
 		}
 	}
+
+	png.Encode(f, img)
 
 	if *memprofile {
 		time.Sleep(500 * time.Millisecond)
