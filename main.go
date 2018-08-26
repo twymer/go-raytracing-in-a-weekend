@@ -219,26 +219,28 @@ func main() {
 
 	for j := 0; j < ny; j++ {
 		for i := 0; i < nx; i++ {
-			pixelColor := computePixelColor(
-				i,
-				j,
-				nx,
-				ny,
-				ns,
-				cam,
-				world,
-			)
+			go func(i, j int) {
+				pixelColor := computePixelColor(
+					i,
+					j,
+					nx,
+					ny,
+					ns,
+					cam,
+					world,
+				)
 
-			img.Set(
-				i,
-				ny-1-j,
-				color.RGBA{
-					uint8(pixelColor[0]),
-					uint8(pixelColor[1]),
-					uint8(pixelColor[2]),
-					255,
-				},
-			)
+				img.Set(
+					i,
+					ny-1-j,
+					color.RGBA{
+						uint8(pixelColor[0]),
+						uint8(pixelColor[1]),
+						uint8(pixelColor[2]),
+						255,
+					},
+				)
+			}(i, j)
 		}
 	}
 
